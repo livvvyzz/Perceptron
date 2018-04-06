@@ -2,9 +2,9 @@
 public class Image {
 
 	private char classType;
-	private int[] pixels;
+	private boolean[] pixels;
 	
-	public Image(char classType, int[] pixels){
+	public Image(char classType, boolean[] pixels){
 		this.classType = classType;
 		this.pixels = pixels;
 	}
@@ -13,7 +13,7 @@ public class Image {
 		return classType;
 	}
 	
-	public int[] getPixels(){
+	public boolean[] getPixels(){
 		return pixels;
 	}
 }
