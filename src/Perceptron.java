@@ -21,23 +21,31 @@ public class Perceptron {
 		System.out.println("Reading data from file " + fname);
 		try {
 			Scanner sc = new Scanner(new File(fname));
-			while(sc.hasNextLine()){
-				sc.nextLine(); //p1
+			while(sc.hasNext()){
+				sc.next(); //p1
 				char classType = sc.next().toCharArray()[1]; //class type
-				int w = sc.nextInt();
-				int h = sc.nextInt();
+				//test
+				String a = sc.next();
+				String b = sc.next();
+
+				int w = Integer.parseInt(a);
+				int h = Integer.parseInt(b);
 				int[] pixels = new int[w*h];
-				char[] chars = sc.next().toCharArray();
+				String st = sc.next();
+
+				char[] chars = st.toCharArray();
 				int index = 0;
 				for(char c : chars){
 					pixels[index] = Character.getNumericValue(c);
 				}
 				Image img = new Image(classType, pixels);
 				images.add(img);
+				sc.next();
 				
 			}
 			
 			sc.close();
+			System.out.println(images.size());
 		} catch (IOException e) {
 			throw new RuntimeException("Data File caused IO exception");
 		}
