@@ -9,17 +9,22 @@ public class Perceptron {
 	ArrayList<Image> images;
 	ArrayList<Feature> features;
 
-	public double learningRate;
-	public double INIT_LR = 0.25;
+	public double learningRate = 0.25;
+	
+	public double seed = 0.29;
+	public int rSeed = 30;
 
 	public Perceptron(String fname) {
-		learningRate = INIT_LR;
+		Random r = new Random();
+		learningRate = r.nextDouble();
+		seed = r.nextDouble();
+		rSeed = r.nextInt(50);
 		readFile(fname);
 		// initialise features
-		initFeatures(); ///////////////////////////////////////////////////////////////// temporary
+		initFeatures(); 
 		run();
 		test();
-		//testImages();
+
 	}
 
 	public void readFile(String fname) {
@@ -86,15 +91,14 @@ public class Perceptron {
 		for (int i = 0; i < 50; i++) {
 			int[] pixelNums = new int[4];
 			boolean[] guess = new boolean[4];
-			Random r = new Random(233 + i);
+			Random r = new Random(rSeed+i);
 			for (int j = 0; j < 4; j++) {
 				pixelNums[j] = r.nextInt(50);
 				guess[j] = r.nextBoolean();
 			}
-			// if(i == 23) System.out.println(pixelNums[0] + " " +pixelNums[1] +
-			// " " +pixelNums[2] + " " +pixelNums[3] + " ");
+
 			Feature f = new Feature(pixelNums, guess);
-			f.setWeight(r.nextDouble() * 0.5);
+			f.setWeight(r.nextDouble()*seed);
 			features.add(f);
 		}
 	}
@@ -103,12 +107,8 @@ public class Perceptron {
 
 		int incorrect = images.size();
 		int correct = 0;
-
-		for (Feature f : features) {
-			System.out.println(f.getWeight());
-		}
-
-		for (int i = 0; i < 100 && incorrect != 0; i++) {
+		int numCycles = 0;
+		for (int i = 0; i < 1000 && incorrect != 0; i++) {
 			int sum = 0;
 			// iterate through each image
 			for (Image img : images) {
@@ -117,10 +117,6 @@ public class Perceptron {
 				double prediction = 0;
 				double realClass = img.getClassType();
 				for (Feature feat : features) {
-					if (i == 0) {
-						// System.out.println(feat.getWeight() + " and then
-						// value: " + feat.calculateValue(images.get(i)));
-					}
 					prediction += feat.calculateValue(img) * feat.getWeight();
 				}
 				if (prediction <= 0)
@@ -140,26 +136,16 @@ public class Perceptron {
 
 					}
 				}
-				/**
-				 * // check if prediction was 0 (O) if (prediction <= 0) { //
-				 * check if actually was 0 if (img.getClassType() == 0) {
-				 * correct++; } else { // adjust weights for (Feature feat :
-				 * features) { double w = feat.getWeight() + (learningRate *
-				 * feat.calculateValue(img)); feat.setWeight(w); } } } else { //
-				 * prediction was 1/X // check if actually is X if
-				 * (img.getClassType() == 1) { correct++; } else { // adjust
-				 * weights for (Feature feat : features) { sum++; double w =
-				 * feat.getWeight() - (learningRate * feat.calculateValue(img));
-				 * feat.setWeight(w); } }
-				 */
 			}
+			incorrect = images.size() - correct;
+			correct = 0;
+			numCycles++;
 		}
-		incorrect = images.size() - correct;
-		correct = 0;
-
+		System.out.println(numCycles);
+		
 	}
 
-	public void test() {
+	public double test() {
 		int incorrect = 0;
 		int correct = 0;
 
@@ -169,7 +155,6 @@ public class Perceptron {
 			for (Feature feat : features) {
 				prediction += feat.evaluate(images.get(i));
 			}
-			System.out.println(prediction);
 			// check if prediction was 0 (O)
 			if (prediction <= 0) {
 				// check if actually was 0
@@ -180,7 +165,6 @@ public class Perceptron {
 				}
 			} else { // prediction was 1/X
 						// check if actually is X
-				System.out.println("g");
 				if (images.get(i).getClassType() == 1) {
 					correct++;
 				} else {
@@ -190,6 +174,7 @@ public class Perceptron {
 		}
 
 		System.out.println("Correct: " + correct + "      -----Incorrect: " + incorrect);
+		return correct/100;
 	}
 
 	public void testImages() {
