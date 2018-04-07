@@ -19,6 +19,7 @@ public class Perceptron {
 		initFeatures(); ///////////////////////////////////////////////////////////////// temporary
 		run();
 		test();
+		//testImages();
 	}
 
 	public void readFile(String fname) {
@@ -42,27 +43,38 @@ public class Perceptron {
 				int h = Integer.parseInt(b);
 				boolean[] pixels = new boolean[w * h];
 				String st = sc.next();
+				String s2 = sc.next();
 
-				char[] chars = st.toCharArray();
+				String s3 = st+s2;
+				char[] chars = s3.toCharArray();
 				int index = 0;
+				int numOn = 0;
+				int numOff = 0;
+				//System.out.println("newline");
 				for (char c : chars) {
-					boolean sgn;
-					if (Character.getNumericValue(c) == 0) {
+					boolean sgn = true;;
+					if (c == '0') {
+						numOff++;
 						sgn = false;
-					} else
+					} else if (c == '1'){
+						numOn++;
 						sgn = true;
+					}
 					pixels[index] = sgn;
+					index++;
 				}
 				Image img = new Image(classType, pixels);
 				images.add(img);
-				sc.next();
+				//sc.next();
 
 			}
-			//System.out.println(images.size());
+			// System.out.println(images.size());
 			sc.close();
 		} catch (IOException e) {
 			throw new RuntimeException("Data File caused IO exception");
 		}
+
+
 	}
 
 	public void initFeatures() {
@@ -82,7 +94,7 @@ public class Perceptron {
 			// if(i == 23) System.out.println(pixelNums[0] + " " +pixelNums[1] +
 			// " " +pixelNums[2] + " " +pixelNums[3] + " ");
 			Feature f = new Feature(pixelNums, guess);
-			f.setWeight(r.nextDouble()*0.5);
+			f.setWeight(r.nextDouble() * 0.5);
 			features.add(f);
 		}
 	}
@@ -91,12 +103,12 @@ public class Perceptron {
 
 		int incorrect = images.size();
 		int correct = 0;
-		
-		for(Feature f : features){
+
+		for (Feature f : features) {
 			System.out.println(f.getWeight());
 		}
 
-		for (int i = 0; i < 10 && incorrect != 0; i++) {
+		for (int i = 0; i < 100 && incorrect != 0; i++) {
 			int sum = 0;
 			// iterate through each image
 			for (Image img : images) {
@@ -105,21 +117,27 @@ public class Perceptron {
 				double prediction = 0;
 				double realClass = img.getClassType();
 				for (Feature feat : features) {
-					if(i == 0){
-						//System.out.println(feat.getWeight() + "     and then value: " + feat.calculateValue(images.get(i)));
+					if (i == 0) {
+						// System.out.println(feat.getWeight() + " and then
+						// value: " + feat.calculateValue(images.get(i)));
 					}
 					prediction += feat.calculateValue(img) * feat.getWeight();
 				}
-				//System.out.println(prediction + "gggffff");
+				if (prediction <= 0)
+					prediction = 0;
+				else
+					prediction = 1;
+				// System.out.println(prediction + "gggffff");
 				double error = prediction - realClass;
-				//System.out.println(error);
+				// System.out.println(error);
 
 				if ((prediction <= 0 && realClass == 0) || (prediction > 0 && realClass == 1)) {
 					correct++;
 				} else {
 					for (Feature feat : features) {
-						double w = feat.getWeight() + (learningRate * feat.calculateValue(img));
+						double w = feat.getWeight() - (learningRate * feat.calculateValue(img) *error);
 						feat.setWeight(w);
+
 					}
 				}
 				/**
@@ -172,5 +190,21 @@ public class Perceptron {
 		}
 
 		System.out.println("Correct: " + correct + "      -----Incorrect: " + incorrect);
+	}
+
+	public void testImages() {
+
+		for (Image img : images) {
+			int on = 0;
+			int off = 0;
+			for (boolean b : img.getPixels()) {
+				if (b)
+					on++;
+				else
+					off++;
+			}
+			System.out.println(on + " " + off );
+			img.testPixels();
+		}
 	}
 }
