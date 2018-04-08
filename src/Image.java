@@ -19,13 +19,5 @@ public class Image {
 		return pixels;
 	}
 	
-	public void testPixels(){
-		int on = 0;
-		int off = 0;
-		for(boolean b : pixels){
-			if(b) on++;
-			else off++;
-		}
-		System.out.println(on + "  " + off + " test pixels in mages");
-	}
+
 }

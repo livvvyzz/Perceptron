@@ -9,12 +9,10 @@ public class Feature {
 	private boolean isDummy = false;
 
 	public Feature(int[] pixels, boolean[] guess) {
-		weight = INITIAL_WEIGHT;
 		this.pixels = pixels;
 		this.guess = guess;
 		if (isDummy)
 			value = 1;
-		printPixels();
 	}
 
 	public Feature(int i) {
@@ -50,12 +48,18 @@ public class Feature {
 	public double evaluate(Image img) {
 		return this.weight * calculateValue(img);
 	}
-
-	public void printPixels(){
-		String a = Integer.toString(pixels[0]);
-		String b = Integer.toString(pixels[1]);
-		String c = Integer.toString(pixels[2]);
-		String d = Integer.toString(pixels[3]);
-		//System.out.println(a+b+c+d);
+	
+	public void print(){
+		StringBuilder s = new StringBuilder();
+		s.append("[");
+		for(int i = 0; i < pixels.length; i++){
+			s.append(pixels[i]+",");
+		}
+		s.append(weight +"]");
+		s.toString();
+		System.out.println(s);
+		
 	}
+
+
 }
