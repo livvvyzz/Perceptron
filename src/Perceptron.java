@@ -20,7 +20,50 @@ public class Perceptron {
 
 		// create img array
 		readFile(fname);
-		// initialse the random numbers
+		
+		/*
+		 * uncomment testAccuracy to find accuracy over 100 runs
+		 */
+		
+		//testAccuracy();
+		runOnce();
+	}
+	
+	public void testAccuracy(){
+		int numConverges = 0;
+		int totalConverges = 0;
+		int minCycle = 999;
+		int maxCycle = 0;
+		double averageCycle = 0; 
+		
+		for(int i = 0; i < 100; i++){
+			//initialise everything
+			Random r = new Random();
+			learningRate = r.nextDouble();
+			randomNum = r.nextDouble();
+			seed = r.nextInt(50);
+			// initialise features
+			initFeatures();
+			run();
+			test();
+			
+			if(numCycles != 1000){
+				numConverges++;
+				totalConverges += numCycles;
+				if(numCycles > maxCycle) maxCycle = numCycles;
+				else if(numCycles <minCycle) minCycle = numCycles;
+			}
+		}
+		
+		averageCycle = totalConverges / numConverges;
+		System.out.println("Converged on " + numConverges + " cycles");
+		System.out.println("Average number of Cycles: " + averageCycle);
+		System.out.println("Max number of Cycles: " + maxCycle);
+		System.out.println("Min number of Cycles: " + minCycle);
+	}
+	
+	public void runOnce(){
+		//initialise everything
 		Random r = new Random();
 		learningRate = r.nextDouble();
 		randomNum = r.nextDouble();
@@ -29,7 +72,6 @@ public class Perceptron {
 		initFeatures();
 		run();
 		test();
-		// print features and their weights
 		printFeatures();
 	}
 
@@ -137,7 +179,7 @@ public class Perceptron {
 			correct = 0;
 			numCycles++;
 		}
-
+		
 	}
 
 	public double test() {
