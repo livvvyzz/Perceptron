@@ -29,6 +29,9 @@ public class Perceptron {
 		runOnce();
 	}
 	
+	/**
+	 * Runs program 100 times to test overall accuracy
+	 */
 	public void testAccuracy(){
 		int numConverges = 0;
 		int totalConverges = 0;
@@ -62,6 +65,9 @@ public class Perceptron {
 		System.out.println("Min number of Cycles: " + minCycle);
 	}
 	
+	/**
+	 * Runs program once, and outputs accuracy
+	 */
 	public void runOnce(){
 		//initialise everything
 		Random r = new Random();
@@ -75,6 +81,10 @@ public class Perceptron {
 		printFeatures();
 	}
 
+	/**
+	 * Reads the data from a given file
+	 * @param fname
+	 */
 	public void readFile(String fname) {
 		images = new ArrayList<Image>();
 
@@ -121,6 +131,9 @@ public class Perceptron {
 
 	}
 
+	/**
+	 * Randomly initialises feautres and their initial weights
+	 */
 	public void initFeatures() {
 		// dummy feature
 		features = new ArrayList<Feature>();
@@ -142,6 +155,9 @@ public class Perceptron {
 		}
 	}
 
+	/**
+	 * Trains the perceptron
+	 */
 	public void run() {
 
 		int incorrect = images.size();
@@ -182,6 +198,10 @@ public class Perceptron {
 		
 	}
 
+	/**
+	 * Tests the perceptron, and finds accuracy 
+	 * @return
+	 */
 	public double test() {
 		double incorrect = 0;
 		double correct = 0;
@@ -221,6 +241,9 @@ public class Perceptron {
 		return correct / 100;
 	}
 
+	/**
+	 * Prints out all the features and there weights
+	 */
 	public void printFeatures() {
 		String s = "\nFeature output: \n[pixel1, pixel2, pixel3, pixel4, end weight]\n";
 		System.out.println(s);
