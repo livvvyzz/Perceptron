@@ -56,7 +56,7 @@ public class Perceptron {
 		}
 		
 		averageCycle = totalConverges / numConverges;
-		System.out.println("Converged on " + numConverges + " cycles");
+		System.out.println("Converged on " + numConverges + " runs");
 		System.out.println("Average number of Cycles: " + averageCycle);
 		System.out.println("Max number of Cycles: " + maxCycle);
 		System.out.println("Min number of Cycles: " + minCycle);
